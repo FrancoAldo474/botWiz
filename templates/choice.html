@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scegli il Pacchetto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+  <style>
+    .fade-in {
+      animation: fadeIn 1s ease-in forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    .group {
+        border: 3px solid #000000;  /* Imposta il bordo di default come nero */
+        transition: border-color 0.3s ease;  /* Aggiunge la transizione per un effetto fluido */
+    }
+
+    .group:hover {
+        border-color: #FFDD00;  /* Cambia il bordo in giallo quando il cursore è sopra */
+    }
+
+
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col relative fade-in">
+    
+      <!-- Logo -->
+      <div class="text-center py-8 w-full">
+        <img alt="WIZSHOT logo" class="mx-auto" height="100" src="{{ url_for('static', filename='logo/logo.jpeg') }}" width="300">
+        <hr class="border-t-2 border-white mt-4">
+      </div>
+    
+      <!-- Upload Section con Home Button -->
+      <div class="flex justify-between items-center w-full px-8">
+        <div class="flex items-center space-x-2 text-2xl">
+          <i class="fas fa-basketball-ball text-yellow-500"></i>
+          <span>Make your choice</span>
+        </div>
+        <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-all space-x-2">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+      </div>
+
+  <!-- Option Buttons -->
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-8 px-8 flex-grow">
+    <!-- Option 1 -->
+    <a href="/upload"
+       class="relative group w-full h-[35rem] bg-cover bg-center rounded-3xl overflow-hidden shadow-2xl text-left fade-in transition-all duration-500"
+       style="background-image: url('{{ url_for('static', filename='images/campo.jpeg') }}');">
+      <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md p-8 flex flex-col justify-between">
+        <h2 class="text-5xl font-bold group-hover:text-yellow-500 transition">📋 WizShotAi Analysis</h2>
+        <p class="text-2xl">•Analisi base tecnologia WizShotAi</p>
+        <span class="text-right text-yellow-500 text-3xl font-bold">FREE</span>
+      </div>
+    </a>
+
+    <!-- Option 2 -->
+    <a href="/advanced_analysis"
+       class="relative group w-full h-[35rem] bg-cover bg-center rounded-3xl overflow-hidden shadow-2xl text-left fade-in transition-all duration-500"
+       style="background-image: url('{{ url_for('static', filename='images/ball.jpeg') }}');">
+      <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md p-8 flex flex-col justify-between">
+        <h2 class="text-5xl font-bold group-hover:text-yellow-500 transition">🔍 Advance Analysis</h2>
+        <p class="text-2xl">•Analisi base con tecnologia WizShotAi </p>
+        <p class="text-2xl">•Analisi da parte di MVP Accademy Coach</p>
+        <p class="text-2xl">•Call dove si analizzano gli aspetti del tiro</p>
+        <span class="text-right text-yellow-500 text-3xl font-bold">49,99€</span>
+      </div>
+    </a>
+
+    <!-- Option 3 -->
+    <a href="/plus_analysis"
+       class="relative group w-full h-[35rem] bg-cover bg-center rounded-3xl overflow-hidden shadow-2xl text-left fade-in transition-all duration-500"
+       style="background-image: url('{{ url_for('static', filename='images/rim.jpeg') }}');">
+      <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md p-8 flex flex-col justify-between">
+        <h2 class="text-5xl font-bold group-hover:text-yellow-500 transition">🚀 Advance + Programma</h2>
+        <p class="text-2xl">•Analisi base con tecnologia WizShotAi </p>
+        <p class="text-2xl">•Analisi da parte di MVP Accademy Coach</p>
+        <p class="text-2xl">•Programma di tiro personalizzato</p>
+        <span class="text-right text-yellow-500 text-3xl font-bold">79,99€</span>
+      </div>
+    </a>
+  </main>
+
+  <!-- Instagram Icon Bottom Right -->
+  <div class="absolute bottom-4 right-4">
+    <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+      <i class="fab fa-instagram text-3xl text-white hover:text-yellow-500"></i>
+    </a>
+  </div>
+
+  <!-- Footer Left Text -->
+  <div class="absolute bottom-4 left-4 text-white text-sm">
+    2025 © WizShotAi
+  </div>
+</body>
+</html>

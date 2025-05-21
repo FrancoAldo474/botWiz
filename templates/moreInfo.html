@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WizShotAi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+  <style>
+    /* Animazioni */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(0); }
+    }
+
+    .fadeIn {
+      animation: fadeIn 1s ease-out;
+    }
+
+    .slideIn {
+      animation: slideIn 0.8s ease-out;
+    }
+
+    .hover-scale:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+
+    .hover-bg-yellow:hover {
+      background-color: #FBBF24;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Font size adjustments */
+    .large-text {
+      font-size: 1.75rem; /* Larger text for more visibility */
+    }
+
+    .extra-large-text {
+      font-size: 2.25rem; /* Even larger for headings */
+    }
+
+    .heading-large {
+      font-size: 3rem; /* Big headings */
+    }
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111827; /* colore di sfondo della track */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #FBBF24; /* giallo evidenziato */
+      border-radius: 6px;
+      border: 2px solid #111827; /* bordo scuro */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #facc15; /* giallo chiaro al passaggio */
+    }
+
+  </style>
+</head>
+<body class="bg-black text-white">
+
+  <!-- Logo -->
+  <div class="text-center py-8 fadeIn">
+    <img alt="WIZSHOT logo" class="mx-auto w-72 h-auto transition-transform transform hover:scale-110" src="{{ url_for('static', filename='logo/logo.jpeg') }}">
+    <hr class="border-t-2 border-white mt-6 opacity-50">
+  </div>
+
+  <!-- Upload Section con Home Button -->
+  <div class="flex justify-between items-center w-full px-8 mt-8 fadeIn">
+    <div class="flex items-center space-x-2 text-xl">
+      <span class="text-yellow-500 large-text">📈Learn More</span>
+    </div>
+    <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-6 py-2 rounded-xl hover:bg-yellow-400 transition space-x-2 hover-scale">
+      <i class="fas fa-home"></i>
+      <span class="large-text">Home</span>
+    </a>
+  </div>
+
+  <!-- Learn More Content -->
+  <div class="px-8 mt-10 space-y-10 text-white fadeIn">
+
+    <!-- Sezione: Come funziona -->
+    <section>
+      <h2 class="text-yellow-400 extra-large-text font-bold mb-4">Come funziona l’applicazione</h2>
+      <ul class="list-disc list-inside space-y-2 text-lg">
+        <li>Combinando computer vision (MediaPipe), machine learning (XGBoost) e biomeccanica per costruire un sistema di valutazione sportiva personalizzata.</li>
+        <li><strong>Input del video:</strong> L’utente carica un video in cui effettua un tiro a canestro.</li>
+        <li><strong>Tracking del corpo:</strong> MediaPipe rileva in tempo reale i punti articolari del corpo (pose detection).</li>
+        <li><strong>Analisi AI:</strong> Un modello XGBoost classifica i movimenti in base alla fase del tiro e segnala eventuali anomalie posturali.</li>
+        <li><strong>Output:</strong> Il sistema genera una diagnosi testuale personalizzata per ogni fase del tiro.</li>
+      </ul>
+    </section>
+
+    <!-- Sezione: Fasi del tiro -->
+    <section>
+      <h2 class="text-yellow-400 extra-large-text font-bold mb-4">Fasi Analizzate</h2>
+      <div class="grid grid-cols-2 gap-4 text-lg">
+        <div class="bg-gray-800 p-4 rounded-xl shadow hover-scale">🏋️ Preparazione</div>
+        <div class="bg-gray-800 p-4 rounded-xl shadow hover-scale">📈 Estensione</div>
+        <div class="bg-gray-800 p-4 rounded-xl shadow hover-scale">🎯 Rilascio</div>
+        <div class="bg-gray-800 p-4 rounded-xl shadow hover-scale">🏁 Follow-through</div>
+      </div>
+    </section>
+
+    <!-- Sezione: Tecnologie -->
+    <section>
+      <h2 class="text-yellow-400 extra-large-text font-bold mb-4">Tecnologie Utilizzate</h2>
+      <ul class="list-disc list-inside space-y-2 text-lg">
+        <li>📦 <strong>MediaPipe:</strong> Rilevamento pose 2D.</li>
+        <li>🤖 <strong>XGBoost:</strong> Classificazione automatica degli errori posturali.</li>
+        <li>🧮 <strong>OpenCV & Python:</strong> Analisi video, estrazione angoli articolari e confronto.</li>
+        <li>🧠 <strong>Dataset personalizzato:</strong> Basato su tiri etichettati come “corretti” o “errati”.</li>
+      </ul>
+    </section>
+
+    <!-- Sezione: Obiettivo -->
+    <section>
+      <h2 class="text-yellow-400 extra-large-text font-bold mb-4">Obiettivo dell’app</h2>
+      <p class="text-lg">
+        Offrire un sistema automatico per l’analisi biomeccanica del tiro a canestro, utile per atleti, allenatori e appassionati.
+        L’obiettivo è fornire un <span class="text-yellow-400 font-semibold">feedback oggettivo, accessibile e migliorabile nel tempo</span>.
+      </p>
+    </section>
+
+    <!-- Sezione: Bibliografia -->
+    <section>
+      <h2 class="text-yellow-400 extra-large-text font-bold mb-4">📚 Bibliografia</h2>
+      <ul class="list-decimal list-inside space-y-2 text-lg">
+        <li>
+          <a href="{{ url_for('static', filename='bibliografia/KinematicShooting.pdf') }}"
+             class="text-yellow-400 underline hover:text-yellow-500" target="_blank">
+             <strong>Cinematica del tiro</strong>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('static', filename='bibliografia/BiomechanicalShooting.pdf') }}"
+             class="text-yellow-400 underline hover:text-yellow-500" target="_blank">
+             <strong>Biomeccanica applicata al tiro</strong>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('static', filename='bibliografia/Descriptive_shot_analysis_in_basketball.pdf') }}"
+             class="text-yellow-400 underline hover:text-yellow-500" target="_blank">
+             <strong>Descriptive shot analysis in basketball</strong>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('static', filename='bibliografia/MovementPatternAnalysisofLayup.pdf') }}"
+             class="text-yellow-400 underline hover:text-yellow-500" target="_blank">
+             <strong>Movement Pattern Analysis of Layup</strong>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('static', filename='bibliografia/Technical_analysis_of_basketball_players_shooting_movements_through.pdf') }}"
+             class="text-yellow-400 underline hover:text-yellow-500" target="_blank">
+             <strong>Technical analysis of basketball player's shooting movements through</strong>
+          </a>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+
+  <div class="flex justify-between" >
+    
+    <!-- Footer Left Text -->
+    <div class="flex justify-start items-center mt-16 mx-8 fadeIn text-white text-sm">
+      2025 © WizShotAi
+    </div>
+    <!-- Instagram Link -->
+    <div class="flex justify-end items-center mt-16 mx-8 fadeIn">
+      <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+        <i class="fab fa-instagram text-5xl text-white hover:text-yellow-500 transition-transform hover:scale-110"></i>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+
+

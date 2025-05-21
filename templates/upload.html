@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WizShotAi – Upload Video</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    body { font-family: 'Roboto', sans-serif; }
+
+    /* Animazioni fade */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .fade-in { animation: fadeIn 0.8s ease-out both; }
+    
+    /* Dropzone style */
+    .dropzone {
+      border: 2px dashed #FFD700;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.05);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .dropzone:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: #FFF;
+    }
+    .dropzone input {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white min-h-screen flex flex-col items-center px-4 py-8 space-y-8 relative">
+
+  <body class="bg-black text-white min-h-screen flex flex-col relative fade-in">
+    
+    <!-- Logo -->
+    <div class="text-center py-8 w-full">
+      <img alt="WIZSHOT logo" class="mx-auto" height="100" src="{{ url_for('static', filename='logo/logo.jpeg') }}" width="300">
+      <hr class="border-t-2 border-white mt-4">
+    </div>
+  
+    <!-- Upload Section con Home Button -->
+    <div class="flex justify-between items-center w-full px-8">
+      <div class="flex items-center space-x-2 text-xl">
+        <i class="fas fa-cloud-upload-alt text-yellow-400"></i>
+        <span class="font-semibold">Upload Your Video</span>
+      </div>
+      <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-all space-x-2">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+    </div>
+
+  <!-- Upload Card -->
+  <section class="w-full max-w-2xl fade-in delay-300">
+    <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+      <label class="dropzone flex flex-col items-center justify-center py-16 cursor-pointer">
+        <i class="fas fa-file-video text-4xl text-yellow-400 mb-4"></i>
+        <span class="text-lg">Click or drag & drop to select a video</span>
+        <input type="file" name="video" accept="video/*" required onchange="this.form.submit()" />
+      </label>
+      <p class="text-gray-400 text-sm mt-2 text-center">
+        Supported: mp4, mov, avi, webm. Max 100MB.
+      </p>
+    </form>
+
+    <!-- Tips + Example Button -->
+    <div class="mt-6 bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 fade-in delay-400">
+      <ul class="space-y-2 text-sm text-gray-300">
+        <li>• Record from front view</li>
+        <li>• Ensure good lighting</li>
+        <li>• Capture full body movement</li>
+        <li>• Keep camera steady</li>
+      </ul>
+      <button onclick="toggleVideoModal()"
+              class="mt-4 md:mt-0 inline-flex items-center gap-2 bg-yellow-400 text-black font-semibold px-5 py-2 rounded-full hover:bg-yellow-300 transition">
+        <i class="fas fa-play-circle"></i> Watch Example
+      </button>
+    </div>
+  </section>
+
+  <!-- Instagram Icon Bottom Right -->
+  <div class="absolute bottom-4 right-4">
+    <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+      <i class="fab fa-instagram text-3xl text-white hover:text-yellow-500"></i>
+    </a>
+  </div>
+
+  <!-- Footer Left Text -->
+  <div class="absolute bottom-4 left-4 text-white text-sm">
+    2025 © WizShotAi
+  </div>
+
+  <!-- Example Video Modal -->
+  <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <div class="relative bg-gray-900 rounded-2xl shadow-2xl w-11/12 max-w-lg p-4 fade-in">
+      <button onclick="toggleVideoModal()"
+              class="absolute top-3 right-3 text-white bg-red-500 p-2 rounded-full hover:bg-red-600 transition">
+        <i class="fas fa-times"></i>
+      </button>
+      <video controls class="w-full rounded-lg mt-6">
+        <source src="{{ url_for('static', filename='video/example.mp4') }}" type="video/mp4"/>
+        Your browser does not support video playback.
+      </video>
+    </div>
+  </div>
+
+  <script>
+    function toggleVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const video = modal.querySelector('video');
+      modal.classList.toggle('hidden');
+      if (modal.classList.contains('hidden')) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    }
+  </script>
+
+</body>
+</html>
+

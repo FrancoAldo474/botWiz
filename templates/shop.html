@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scegli il Pacchetto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+  <style>
+    .fade-in {
+      animation: fadeIn 1s ease-in forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    .group {
+        border: 3px solid #000000;  /* Imposta il bordo di default come nero */
+        transition: border-color 0.3s ease;  /* Aggiunge la transizione per un effetto fluido */
+    }
+
+    .group:hover {
+        border-color: #FFDD00;  /* Cambia il bordo in giallo quando il cursore è sopra */
+    }
+
+
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col relative fade-in">
+    
+      <!-- Logo -->
+      <div class="text-center py-8 w-full">
+        <img alt="WIZSHOT logo" class="mx-auto" height="100" src="{{ url_for('static', filename='logo/logo.jpeg') }}" width="300">
+        <hr class="border-t-2 border-white mt-4">
+      </div>
+    
+      <!-- Upload Section con Home Button -->
+      <div class="flex justify-between items-center w-full px-8">
+        <div class="flex items-center space-x-2 text-2xl">
+          <i class="fas fa-basketball-ball text-yellow-500"></i>
+          <span>Shop</span>
+        </div>
+        <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-all space-x-2">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+      </div>
+
+  <!-- Work in Progress Animated Text -->
+  <div class="flex-grow flex flex-col items-center justify-center text-center space-y-4">
+    <h1 class="text-5xl md:text-6xl font-bold text-yellow-400 animate-pulse">
+      Work in Progress
+    </h1>
+    <p class="text-lg md:text-xl text-white">
+      Vuoi saperne di più? <br> Scrivici a 
+      <a href="mailto:wizshotai@gmail.com" class="text-yellow-400 underline hover:text-yellow-500">wizshotai@gmail.com</a>
+    </p>
+  </div>
+
+    
+      <!-- Instagram Icon Bottom Right -->
+  <div class="absolute bottom-4 right-4">
+    <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+      <i class="fab fa-instagram text-3xl text-white hover:text-yellow-500"></i>
+    </a>
+  </div>
+
+  <!-- Footer Left Text -->
+  <div class="absolute bottom-4 left-4 text-white text-sm">
+    2025 © WizShotAi
+  </div>
+</body>
+</html>

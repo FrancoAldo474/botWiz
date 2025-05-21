@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WizShotAi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+  <style>
+    /* Animazioni */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(0); }
+    }
+
+    .fadeIn {
+      animation: fadeIn 1s ease-out;
+    }
+
+    .slideIn {
+      animation: slideIn 0.8s ease-out;
+    }
+
+    .hover-scale:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+
+    .hover-bg-yellow:hover {
+      background-color: #FBBF24;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Font size adjustments */
+    .large-text {
+      font-size: 1.75rem; /* Larger text for more visibility */
+    }
+
+    .extra-large-text {
+      font-size: 2.25rem; /* Even larger for headings */
+    }
+
+    .heading-large {
+      font-size: 3rem; /* Big headings */
+    }
+  </style>
+</head>
+<body class="bg-black text-white">
+
+  <!-- Logo -->
+  <div class="text-center py-8 fadeIn">
+    <img alt="WIZSHOT logo" class="mx-auto w-72 h-auto transition-transform transform hover:scale-110" src="{{ url_for('static', filename='logo/logo.jpeg') }}">
+    <hr class="border-t-2 border-white mt-6 opacity-50">
+  </div>
+
+  <!-- Upload Section con Home Button -->
+  <div class="flex justify-between items-center w-full px-8 mt-8 fadeIn">
+    <div class="flex items-center space-x-2 text-xl">
+      <span class="text-yellow-500 large-text">📈Advanced analysis in collaboration with MVP Basketball Academy</span>
+    </div>
+    <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-6 py-2 rounded-xl hover:bg-yellow-400 transition space-x-2 hover-scale">
+      <i class="fas fa-home"></i>
+      <span class="large-text">Home</span>
+    </a>
+  </div>
+
+  <!-- Introductory Section -->
+  <div class="mt-16 mx-8 text-white fadeIn">
+    <!-- Titolo con dimensione più grande ma non troppo -->
+    <h2 class="font-extrabold mb-6 text-yellow-500 text-center text-3xl">🏀 Analizza e migliora il tuo tiro come un PRO!</h2>
+
+    <!-- Paragrafi con dimensione intermedia -->
+    <p class="text-lg mb-6 text-gray-200">Con la collaborazione tra WizShot AI e MVP Basketball Academy, nasce un servizio esclusivo per chi vuole portare il proprio tiro al livello successivo.</p>
+    <p class="text-lg mb-6 text-gray-200">🎯 Come funziona?</p>
+
+    <!-- Lista con dimensione intermedia -->
+    <ul class="list-disc list-inside pl-4 text-gray-300 mb-6 text-lg">
+      <li>💪 Al prezzo di <span class="text-yellow-500">79,99€</span> puoi acquistare il Training pack avanzato</li>
+      <li>📹 Tu ci mandi 3 brevi video del tuo tiro (fronte, lato destro e sinistro)</li>
+      <li>🤖 L'intelligenza artificiale di WizShot analizza ogni dettaglio delle tue meccaniche</li>
+      <li>📊 I coach di MVP Academy revisionano tutto e aggiungono il loro feedback tecnico</li>
+      <li>📝 Ricevi un report dettagliato con grafici, dati qualitativi</li>
+      <li>🎯 Programma personalizzato per migliorare il tiro</li>
+    </ul>
+  </div>
+
+
+
+  <button
+    type="button"
+    onclick="window.location='{{ url_for('shop') }}'"
+    class="group relative z-10 flex items-center justify-center gap-2 mx-auto px-4 py-2 text-lg font-semibold text-black bg-yellow-400 border-2 border-yellow-400 rounded-full shadow-xl backdrop-blur-md isolation-auto overflow-hidden
+
+          before:absolute before:top-0 before:left-0 before:-z-10
+          before:h-full before:w-0
+          before:rounded-full
+          before:bg-yellow-500
+          before:transition-all before:duration-700
+
+          hover:before:w-full
+          hover:text-black
+    "
+  >
+    🚀 Accedi all'offerta
+    <!-- SVG identical to above -->
+  </button>
+
+
+  <div class="flex justify-between" >
+    
+    <!-- Footer Left Text -->
+    <div class="flex justify-start items-center mt-16 mx-8 fadeIn text-white text-sm">
+      2025 © WizShotAi
+    </div>
+    <!-- Instagram Link -->
+    <div class="flex justify-end items-center mt-16 mx-8 fadeIn">
+      <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+        <i class="fab fa-instagram text-5xl text-white hover:text-yellow-500 transition-transform hover:scale-110"></i>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+

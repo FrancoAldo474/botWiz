@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WizShotAi - Result</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;  /* IE e Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;             /* Chrome, Safari e Opera */
+    }
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111827; /* colore di sfondo della track */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #FBBF24; /* giallo evidenziato */
+      border-radius: 6px;
+      border: 2px solid #111827; /* bordo scuro */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #facc15; /* giallo chiaro al passaggio */
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center justify-start space-y-8 px-4 py-8 relative">
+
+  <!-- Logo + Linea -->
+  <div class="text-center py-8 w-full">
+    <img alt="WIZSHOT logo" class="mx-auto" height="100" src="{{ url_for('static', filename='logo/logo.jpeg') }}" width="300">
+    <hr class="border-t-2 border-white mt-4">
+  </div>
+
+  <!-- Barra Superiore -->
+  <div class="w-full flex items-center justify-between px-4 md:px-12 mt-4">
+    <div class="flex items-center space-x-3">
+      <i class="fas fa-chart-bar text-yellow-400 text-2xl"></i>
+      <h2 class="text-2xl font-bold">Results</h2>
+    </div>
+    <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-all space-x-2">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+  </div>
+
+  <!-- Sezione Principale -->
+  <main class="w-full mt-12 px-4">
+    <div class="flex flex-col lg:flex-row w-full gap-8">
+    
+      <!-- Colonna Sinistra -->
+      <section class="lg:w-1/3 flex flex-col space-y-6">
+        <h3 class="text-2xl font-bold border-b-2 border-yellow-400 pb-2">Player Information</h3>
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg space-y-4">
+          <ul class="space-y-2 text-lg font-medium">
+            <li><strong>Name:</strong> {{ session['nome'] }}</li>
+            <li><strong>Surname:</strong> {{ session['cognome'] }}</li>
+            <li><strong>Date of Birth:</strong> {{ session['dob'] }}</li>
+            <li><strong>Position:</strong> {{ session['ruolo'] }}</li>
+          </ul>
+        </div>
+
+        <!-- Percentuale -->
+        <div class="bg-yellow-400 text-black rounded-2xl h-48 flex flex-col items-center justify-center shadow-lg">
+          <span class="text-6xl font-extrabold drop-shadow-lg">
+            {{ session['percentual'] }}%
+          </span>
+        </div>
+      </section>
+
+      <!-- Colonna Destra -->
+      <section class="lg:w-2/3 flex flex-col space-y-4">
+        <h3 class="text-2xl font-bold border-b-2 border-yellow-400 pb-2">Results Overview</h3>
+        
+        <!-- Risultati -->
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-lg flex-1 overflow-y-auto hide-scrollbar" style="max-height: 480px;">
+          <ol class="list-decimal list-inside space-y-2 text-lg leading-relaxed">
+            {% for line in session['results'] %}
+              <li>{{ line }}</li>
+            {% endfor %}
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+    
+
+    <!-- Galleria di Frame -->
+    <div class="w-full mt-12 px-4">
+      <h3 class="text-2xl font-bold mb-6">Form Frames</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="flex flex-col items-center bg-white rounded-xl p-3 shadow-lg">
+          <img src="{{ url_for('get_frame', fase='preparazione') }}" alt="Preparazione" class="w-full h-auto object-contain rounded-md">
+          <p class="mt-2 text-black font-semibold text-center">Preparation</p>
+        </div>
+        <div class="flex flex-col items-center bg-white rounded-xl p-3 shadow-lg">
+          <img src="{{ url_for('get_frame', fase='estensione') }}" alt="Estensione" class="w-full h-auto object-contain rounded-md">
+          <p class="mt-2 text-black font-semibold text-center">Transition</p>
+        </div>
+        <div class="flex flex-col items-center bg-white rounded-xl p-3 shadow-lg">
+          <img src="{{ url_for('get_frame', fase='rilascio') }}" alt="Rilascio" class="w-full h-auto object-contain rounded-md">
+          <p class="mt-2 text-black font-semibold text-center">Release</p>
+        </div>
+        <div class="flex flex-col items-center bg-white rounded-xl p-3 shadow-lg">
+          <img src="{{ url_for('get_frame', fase='Follow-Through') }}" alt="Follow Through" class="w-full h-auto object-contain rounded-md">
+          <p class="mt-2 text-black font-semibold text-center">Follow-Through</p>
+        </div>
+      </div>
+    </div>
+    <!-- Bottoni -->
+    <div class="w-full flex justify-center mt-8 space-x-4">
+      <a href="{{ url_for('plus_analysis') }}" class="bg-yellow-500 text-black font-bold px-8 py-4 rounded-xl text-xl hover:bg-yellow-400 transition">
+        Go to Advanced Analysis
+      </a>
+      <a href="{{ url_for('genera_pdf') }}" class="bg-blue-600 text-white font-bold px-8 py-4 rounded-xl text-xl hover:bg-blue-500 transition">
+        Scarica PDF
+      </a>
+    </div>
+  </main>
+
+  <!-- Instagram Icon Bottom Right -->
+  <div class="absolute bottom-1 right-4">
+    <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+      <i class="fab fa-instagram text-3xl text-white hover:text-yellow-500"></i>
+    </a>
+  </div>
+
+  <!-- Footer Left Text -->
+  <div class="absolute bottom-1 left-4 text-white text-sm">
+    2025 © WizShotAi
+  </div>
+
+
+</body>
+</html>
+

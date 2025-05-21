@@ -1,0 +1,119 @@
+1. Manage lenguage 
+    capire meglio se Flask-bubble oppure un dizionario dove l'applicazione si rende conto dove è-default en
+2. Shop screen:
+    📝 1. Inserimento dei 3 video e delle informazioni da parte dell'utente(nome, cognome, data di nascita,email,posizione, peso, altezza, mano dominante)
+        Quando l'utente accede alla tua applicazione, deve essere in grado di caricare i 3 video e fornire le informazioni necessarie (ad esempio, nome, data di nascita, ecc.). Questo dovrebbe avvenire tramite una GUI (interfaccia utente) chiara e intuitiva.
+
+        Interfaccia di caricamento video: Utilizza un form dove l'utente può caricare i 3 video (fronte, lato destro, lato sinistro) direttamente tramite un modulo di upload.
+
+        Compilazione delle informazioni: L'utente deve compilare campi come:
+
+        Nome
+
+        Email
+
+        Eventuali preferenze o informazioni extra (se necessario).
+
+        Questi video possono essere caricati nella tua applicazione su un server o utilizzando un servizio di storage cloud (come Amazon S3, Google Cloud Storage, o Dropbox).
+
+    💳 2. Conferma dell'acquisto con pagamento
+        Dopo che l'utente ha caricato i video e le informazioni richieste, l'app deve passare alla schermata di pagamento.
+
+        Pagamento sicuro: Usa un sistema di pagamento come Stripe o PayPal per consentire all'utente di completare il pagamento. Questo potrebbe avvenire direttamente nell'app, e una volta completato, l'utente deve essere reindirizzato a una pagina di conferma.
+
+    📧 3. Invio dell'email di conferma acquisto (No-Reply)
+        Dopo che l'utente ha completato il pagamento, la tua applicazione deve inviare automaticamente due email:
+
+        Email a te (come amministratore):
+
+        Questa email contiene il link ai video caricati e le informazioni dell'utente, così puoi iniziare l'analisi.
+
+        Esempio di contenuto:
+
+        "Hai ricevuto un nuovo ordine. I video di [Nome Utente] sono stati caricati e il pagamento è stato completato. Accedi ai file video da [Link al file] per procedere con l'analisi."
+
+        Email all'utente (no-reply):
+
+        Questa è un'email automatica senza risposta (no-reply), che conferma l'acquisto e fornisce una panoramica del flusso successivo.
+
+        Esempio di contenuto:
+
+        "Ciao [Nome Utente],
+
+        Grazie per aver acquistato il nostro servizio di analisi del tiro! Abbiamo ricevuto i tuoi video. Il nostro team inizierà presto l'analisi e ti invieremo il report completo entro 24-48 ore.
+
+        Ti ringraziamo per aver scelto WizShot e MVP Basketball Academy!
+
+        Restiamo a disposizione per qualsiasi domanda."
+
+    📤 4. Invio dei video a te per l'analisi
+        A questo punto, i video sono già stati caricati e il pagamento è stato completato, quindi l'app invia automaticamente i video al tuo sistema di analisi. Ci sono due modi per farlo:
+
+        Via Storage Cloud: Se i video sono archiviati su una piattaforma come Amazon S3, puoi configurare un link che ti consente di scaricare i video per l'analisi.
+
+        Invio automatico via email: L'app può inviare un'email automatica a te con i link ai video (se sono archiviati online) o gli allegati dei video.
+
+    📊 5. Invio del report da parte tua
+        Una volta che hai completato l'analisi, l'ultimo passaggio consiste nell'inviare il report finale all'utente.
+
+        Prepara il report: Una volta completata l'analisi dei video, prepara un report dettagliato che può includere:
+
+        Feedback sull'analisi meccanica del tiro.
+
+        Suggerimenti per migliorare il tiro.
+
+        Grafici o altre informazioni tecniche se necessarie.
+
+        Invio dell'email con il report:
+
+        Invia il report all'utente tramite una email automatica.
+
+        Puoi allegare il report come PDF o creare una pagina web personalizzata con il report (e inviare un link).
+
+        Esempio di email per l'invio del report:
+
+        Ciao [Nome Utente],
+
+        Siamo felici di inviarti il tuo report completo sull'analisi del tuo tiro! Qui troverai un'analisi dettagliata della tua meccanica, i punti di forza e le aree su cui lavorare per migliorare.
+
+        📊 Scarica il tuo report: [Link al report PDF o allegato]
+
+        In bocca al lupo con il tuo allenamento! Se hai domande o desideri ulteriori consigli, non esitare a contattarci.
+
+        Grazie per aver scelto WizShot e MVP Basketball Academy!
+
+    🛠️ Integrazione Tecnica:
+        Caricamento video:
+
+        Usa un servizio di archiviazione cloud come Amazon S3 o Google Cloud Storage per archiviare i video.
+
+        L'app dovrebbe raccogliere i video tramite un modulo di upload.
+
+        Integrazione del sistema di pagamento:
+
+        Implementa una piattaforma di pagamento come Stripe o PayPal per gestire i pagamenti.
+
+        Puoi integrare il pagamento direttamente nell'app con l'API di Stripe/PayPal.
+
+        Automazione dell'invio delle email:
+
+        Usa SendGrid, Mailgun o Amazon SES per inviare email automatiche.
+
+        Zapier o una soluzione backend personalizzata possono essere utilizzati per inviare automaticamente le email al completamento dell'acquisto.
+
+        Notifiche e gestione del flusso:
+
+        Quando un pagamento è confermato, l'app invia una notifica a te e una conferma all'utente.
+
+        L'app deve archiviare i video o inviarli automaticamente al tuo sistema di analisi per procedere con la valutazione.
+
+    Riepilogo:
+        Fase 1: L'utente carica i video e le informazioni nell'app.
+
+        Fase 2: L'utente completa il pagamento.
+
+        Fase 3: Email di conferma inviata automaticamente a te (amministratore) e all'utente.
+
+        Fase 4: I video vengono inviati a te per l'analisi.
+
+        Fase 5: Invio del report finale all'utente.

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WizShotAi - Upload Video</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #FFDD00;
+      box-shadow: 0 0 10px rgba(255, 221, 0, 0.6);
+    }
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111827; /* colore di sfondo della track */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #FBBF24; /* giallo evidenziato */
+      border-radius: 6px;
+      border: 2px solid #111827; /* bordo scuro */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #facc15; /* giallo chiaro al passaggio */
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center justify-start space-y-8 px-4 py-8 relative">
+
+  <!-- Logo -->
+  <div class="text-center py-8 w-full">
+    <img alt="WIZSHOT logo" class="mx-auto" height="100" src="{{ url_for('static', filename='logo/logo.jpeg') }}" width="300">
+    <hr class="border-t-2 border-white mt-4">
+  </div>
+
+  <!-- Upload Section con Home Button -->
+  <div class="flex justify-between items-center w-full px-8">
+    <div class="flex items-center space-x-2 text-2xl">
+      <i class="fas fa-cloud-upload-alt text-yellow-500"></i>
+      <span>Upload Video</span>
+    </div>
+    <a href="{{ url_for('index') }}" class="flex items-center bg-yellow-500 text-black font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-all space-x-2">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+  </div>
+
+  <!-- Video + Form Section -->
+  <div class="bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-6xl">
+    <form method="POST" action="{{ url_for('analyze') }}">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+
+        <!-- Video Section -->
+        <div class="flex flex-col items-center">
+          <h2 class="text-3xl font-bold mb-4 text-center">Uploaded Video</h2>
+          {% if session['video_filename'] %}
+          <video id="selectedVideo" controls class="w-full max-w-md h-auto rounded-xl" style="object-fit: contain;">
+            <source src="{{ url_for('static', filename='videos/' + session['video_filename']) }}" type="video/mp4" />
+            Il tuo browser non supporta la riproduzione del video.
+          </video>
+          {% else %}
+            <p class="text-red-500">No video uploaded. <a href="{{ url_for('upload') }}" class="underline text-yellow-500">Go back</a></p>
+          {% endif %}
+        </div>
+
+        <!-- Personal Info + Form Fields -->
+        <div class="text-white flex flex-col justify-between h-full space-y-6">
+          <div>
+            <h2 class="text-2xl font-bold mb-4">Personal Info</h2>
+            <div class="mb-4">
+              <label for="nome" class="block mb-1">First Name</label>
+              <input name="nome" id="nome" type="text" class="input-field w-full px-3 py-2 rounded text-black" placeholder="e.g. John" required />
+            </div>
+            <div class="mb-4">
+              <label for="cognome" class="block mb-1">Last Name</label>
+              <input name="cognome" id="cognome" type="text" class="input-field w-full px-3 py-2 rounded text-black" placeholder="e.g. Doe" required />
+            </div>
+            <div class="mb-4">
+              <label for="dob" class="block mb-1">Date of Birth</label>
+              <input name="dob" id="dob" type="date" class="input-field w-full px-3 py-2 rounded text-black" required />
+            </div>
+            <div class="mb-4">
+              <label for="altezza" class="block mb-1">Height (cm)</label>
+              <input name="altezza" id="altezza" type="number" class="input-field w-full px-3 py-2 rounded text-black" placeholder="e.g. 190" required />
+            </div>
+            <div class="mb-4">
+              <label for="peso" class="block mb-1">Weight (kg)</label>
+              <input name="peso" id="peso" type="number" class="input-field w-full px-3 py-2 rounded text-black" placeholder="e.g. 85" required />
+            </div>
+            <div class="mb-6">
+              <label for="ruolo" class="block mb-1">Role</label>
+              <select name="ruolo" id="ruolo" class="input-field w-full px-3 py-2 rounded text-black" required>
+                <option value="">Select Role</option>
+                <option value="playmaker">Playmaker</option>
+                <option value="guard">Guard</option>
+                <option value="small forward">Small Forward</option>
+                <option value="big forward">Big Forward</option>
+                <option value="center">Center</option>
+              </select>
+            </div>
+            <div class="mb-6">
+              <label for="dominant_hand" class="block mb-1">Dominant Hand</label>
+              <select name="dominant_hand" id="dominant_hand" class="input-field w-full px-3 py-2 rounded text-black" required>
+                <option value="">Select Side</option>
+                <option value="Left">Left</option>
+                <option value="Right">Right</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between gap-4 mt-4">
+            <button type="submit" class="bg-yellow-500 text-black px-6 py-3 rounded-xl w-full sm:w-auto transition-all hover:bg-yellow-400">
+              Analyze Video
+            </button>
+            <button type="button" onclick="document.getElementById('changeVideoInput').click()" class="bg-gray-900 text-yellow-500 px-6 py-3 rounded-xl w-full sm:w-auto transition-all hover:bg-gray-700">
+              Change Video
+            </button>
+            <input type="file" id="changeVideoInput" accept="video/*" class="hidden" onchange="handleFileChange(event)">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer Fixed Bottom -->
+  <footer class="fixed bottom-4 left-0 right-0 flex justify-between items-center px-4 text-white text-sm z-50">
+    <div>2025 © WizShotAi</div>
+    <a href="https://www.instagram.com/wizshot.ai/" target="_blank">
+      <i class="fab fa-instagram text-2xl hover:text-yellow-500 transition"></i>
+    </a>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    function handleFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('video', file);
+
+        fetch('/change_video', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const videoElement = document.getElementById('selectedVideo');
+            const sourceElement = videoElement.querySelector('source');
+            sourceElement.src = data.video_url + '?t=' + new Date().getTime(); // force reload
+            videoElement.load();
+          } else {
+            alert("Errore nel caricamento video");
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
+

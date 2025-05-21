@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>WizShotAi</title>
+  <style>
+    /* Personalizzazione della scroll bar */
+    ::-webkit-scrollbar {
+      width: 12px; /* Aumenta la larghezza della scroll bar */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.4); /* Colore della parte mobile della scroll bar */
+      border-radius: 10px; /* Bordi arrotondati */
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1); /* Colore della traccia della scroll bar */
+    }
+
+    /* Aumenta la larghezza della navbar */
+    #navbar {
+      width: 100%; /* Barra di navigazione orizzontale più larga */
+      max-width: 1200px; /* Massima larghezza per limitare l'espansione */
+      padding: 1rem 2rem; /* Più padding orizzontale */
+    }
+
+    #navbar button {
+      padding: 0.75rem 1.5rem; /* Più spazio sui pulsanti */
+      font-size: 1.1rem; /* Dimensione del font leggermente più grande */
+    }
+    .button {
+      --main-color: rgb(255, 225, 0); /* giallo acceso */
+      --main-bg-color: rgba(255, 255, 0, 0.2); /* giallo chiaro trasparente */
+      --pattern-color: rgba(255, 225, 0, 0.1); /* pattern giallo tenue */
+
+      filter: hue-rotate(0deg); /* base: giallo */
+
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5rem;
+      background: radial-gradient(
+          circle,
+          var(--main-bg-color) 0%,
+          rgba(0, 0, 0, 0) 95%
+        ),
+        linear-gradient(var(--pattern-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--pattern-color) 1px, transparent 1px);
+      background-size:
+        cover,
+        15px 15px,
+        15px 15px;
+      background-position:
+        center center,
+        center center,
+        center center;
+      border-image: radial-gradient(
+          circle,
+          var(--main-color) 0%,
+          rgba(0, 0, 0, 0) 100%
+        ) 1;
+      border-width: 1px 0 1px 0;
+      color: var(--main-color);
+      padding: 1rem 4rem;
+      font-weight: 700;
+      font-size: 1.5rem;
+      transition:
+        background-size 0.2s ease-in-out,
+        filter 0.2s ease-in-out;
+    }
+
+    .button:hover {
+      background-size:
+        cover,
+        10px 10px,
+        10px 10px;
+    }
+
+    .button:active {
+      filter: hue-rotate(-90deg); /* giallo → verde */
+    }
+    /* Keyframes per il fade-in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    /* Classe base */
+    .fade-in {
+      opacity: 0;             /* parte invisibile */
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    /* Ritardi per stagger */
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-800 { animation-delay: 0.8s; }
+    .carousel {
+      width: 100%;
+      max-width: 1400px;
+      height: 400px;
+      display: flex;
+      gap: 10px;
+      padding: 1rem;
+      background: #000;
+      border-radius: 16px;
+    }
+
+    .carousel-item {
+      position: relative; /* Aggiunto per gestire la posizione assoluta dell'overlay */
+      height: 100%;
+      flex: 1;
+      overflow: hidden;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: flex 0.5s ease;
+      background: #000;
+      border: 2px solid #facc15;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+
+    .carousel-item:hover {
+      flex: 4;
+    }
+
+    .carousel-item span {
+      min-width: 14em;
+      padding: 1em;
+      text-align: center;
+      transform: rotate(-90deg);
+      transition: transform 0.5s ease;
+      text-transform: uppercase;
+      color: #facc15;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .carousel-item:hover span {
+      transform: rotate(0);
+    }
+    /* Info overlay, che sarà nascosto inizialmente */
+    .info-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none; /* Evita che l'utente interagisca con l'overlay fino a quando non è visibile */
+      transition: opacity 0.3s ease-in-out;
+      max-width: 80%;
+      text-align: center;
+      font-size: 1rem;
+      z-index: 2;
+    }
+
+    /* Quando si passa sopra la carta, l'overlay diventa visibile */
+    .carousel-item:hover .info-overlay {
+      opacity: 1;
+      pointer-events: auto; /* Permette l'interazione con l'overlay */
+    }
+    .rating {
+      display: inline-block;
+      direction: rtl;
+    }
+    .rating input { display: none; }
+    .rating label {
+      float: right;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.3s;
+      font-size: 30px;
+    }
+    .rating label:before { content: '\2605'; }
+    .rating input:checked ~ label,
+    .rating label:hover,
+    .rating label:hover ~ label {
+      color: #FFD700;
+    }
+
+  </style>
+</head>
+  <body class="bg-yellow-400 text-black">
+
+  <!-- Responsive, animated navbar -->
+  <div id="navbar" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black text-white opacity-0 pointer-events-none transition-opacity duration-500 z-50 rounded-2xl shadow-lg">
+    <div class="flex flex-row items-center justify-between w-full text-sm sm:text-base">
+      <button onclick="scrollToScreen(0)" class="px-4 py-2">Home</button>
+      <button onclick="scrollToScreen(1)" class="px-4 py-2">The Process</button>
+      <button onclick="scrollToScreen(2)" class="px-4 py-2">About</button>
+      <button onclick="scrollToScreen(3)" class="px-4 py-2">Testimonials</button>
+      <button onclick="scrollToScreen(4)" class="px-4 py-2">Contact</button>
+    </div>
+  </div>
+
+  <!-- Screens -->
+  <div>
+    <div id="screen1" class="relative h-screen flex items-center justify-center">
+      <div
+        class="bg-black rounded-3xl shadow-xl w-full max-w-screen-xl mx-auto h-[700px]
+              flex flex-col items-center justify-center p-8 md:p-12 space-y-10 text-center"
+      >
+        <!-- Logo -->
+        <img src="{{ url_for('static', filename='logo/logo.jpeg') }}"
+          alt="WizShot Logo"
+          class="w-116 md:w-[28rem] mx-auto fade-in delay-200" 
+        />
+
+
+        <!-- Titolo -->
+        <p class="text-3xl md:text-4xl font-extrabold fade-in delay-400 text-white leading-snug max-w-lg">
+          Analyze your shot meccanic<br />
+          with WizShotAi
+        </p>
+
+        <!-- Pulsanti -->
+        <div class="flex justify-center gap-6 fade-in delay-600">
+          <button onclick="window.location.href='/choice'" class="button w-40 md:w-60">
+            Start
+          </button>
+          <button onclick="window.location.href='/perfect'" class="button w-40 md:w-60">
+            Learn More
+          </button>
+        </div>
+      </div>
+  
+      <!-- Scritta in basso a sinistra -->
+      <div class="absolute bottom-4 left-4 text-sm font-medium fade-in delay-800">
+        2025 © WizShotAi
+      </div>
+    </div>
+    <div id="screen2" class="h-screen bg-yellow-400 text-black flex flex-col items-center justify-center px-6">
+      <h2 class="text-7xl font-extrabold tracking-wide uppercase text-black text-center mb-16 fade-in delay-200">The Process</h2>
+    
+      <div class="carousel fade-in delay-400">
+        <div class="carousel-item">
+          <span>Upload</span>
+          <div class="info-overlay">
+            <p>Carica il tuo video dove tiri al canestro.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <span>Analyze</span>
+          <div class="info-overlay">
+            <p>Inizia l'analisi dettagliata delle tue meccaniche di tiro.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <span>Compare</span>
+          <div class="info-overlay">
+            <p>Compara le tue meccaniche di tiro con quelle ideali.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <span>Improve</span>
+          <div class="info-overlay">
+            <p>Migliora le tue meccaniche di tiro con esercizi mirati.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <span>Succeed</span>
+          <div class="info-overlay">
+            <p>Aumento repentino delle proprie percentuali.</p>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div id="screen3" class="h-screen bg-black text-white flex items-center justify-center px-10">
+      <div class="max-w-5xl text-center fade-in delay-200">
+        <h2 class="text-5xl md:text-6xl font-extrabold mb-12 text-yellow-400">
+          About
+        </h2>
+        <p class="text-2xl md:text-3xl font-light leading-relaxed text-white">
+          The focus of <span class="font-semibold text-yellow-400">WizShot</span> is on pure analysis. 
+          For over a decade, our mission has been to create the best shooting mechanics 
+          for enthusiasts and professionals.
+          <br /><br />
+          <span class="italic text-gray-300">
+            Analyze, improve and succeed — this is what makes a winning athlete.
+          </span>
+        </p>
+      </div>
+    </div>
+    <div id="screen4" class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 py-16">
+      <h2 class="text-6xl font-extrabold text-yellow-400 mb-12 fade-in delay-200 text-center uppercase">Testimonials</h2>
+    
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full fade-in delay-400">
+        <!-- Card di recensione -->
+        <div class="bg-yellow-400 text-black p-6 rounded-xl shadow-lg">
+          <div class="flex mb-2 text-yellow-600">
+            <div class="text-xl mb-4">⭐⭐⭐⭐⭐</div>
+          </div>
+          <p class="text-lg mb-4 italic">"WizShot ha migliorato la mia precisione in una settimana!"</p>
+          <p class="font-bold text-right">— Luca B.</p>
+        </div>
+    
+        <div class="bg-yellow-400 text-black p-6 rounded-xl shadow-lg">
+          <div class="flex mb-2 text-yellow-600">
+            <div class="text-xl mb-4">⭐⭐⭐⭐⭐</div>
+          </div>
+          <p class="text-lg mb-4 italic">"Il sistema di analisi è davvero preciso e facile da usare."</p>
+          <p class="font-bold text-right">— Martina R.</p>
+        </div>
+    
+        <div class="bg-yellow-400 text-black p-6 rounded-xl shadow-lg">
+          <div class="flex mb-2 text-yellow-600">
+            <div class="text-xl mb-4">⭐⭐⭐⭐</div>
+          </div>
+          <p class="text-lg mb-4 italic">"Ottimo supporto tecnico e risultati reali sul campo!"</p>
+          <p class="font-bold text-right">— Giovanni F.</p>
+        </div>
+    
+        <!-- Seconda riga -->
+        <div class="bg-yellow-400 text-black p-6 rounded-xl shadow-lg">
+          <div class="flex mb-2 text-yellow-600">
+            <div class="text-xl mb-4">⭐⭐⭐⭐</div>
+          </div>
+          <p class="text-lg mb-4 italic">"Perfetto per chi vuole migliorare la propria tecnica."</p>
+          <p class="font-bold text-right">— Elisa T.</p>
+        </div>
+    
+        <div class="bg-yellow-400 text-black p-6 rounded-xl shadow-lg">
+          <div class="flex mb-2 text-yellow-600">
+            <div class="text-xl mb-4">⭐⭐⭐⭐⭐</div>
+          </div>
+          <p class="text-lg mb-4 italic">"L'analisi video ha cambiato il mio approccio agli allenamenti."</p>
+          <p class="font-bold text-right">— Marco C.</p>
+        </div>
+    
+        <div class="bg-yellow-400 text-black p-6 rounded-xl shadow-lg">
+          <div class="flex mb-2 text-yellow-600">
+            <div class="text-xl mb-4">⭐⭐⭐⭐⭐</div>
+          </div>
+          <p class="text-lg mb-4 italic">"Consigliatissimo per professionisti e amatori!"</p>
+          <p class="font-bold text-right">— Serena L.</p>
+        </div>
+      </div>
+    
+      <!-- CTA Button -->
+      <div class="mt-16 fade-in delay-600">
+        <a href="#!" 
+          class="cta-review-button group inline-flex items-center justify-center gap-3 px-8 py-4 bg-yellow-400 text-black text-lg font-bold rounded-full transition-all duration-300 hover:bg-yellow-300 hover:scale-105 shadow-lg">
+          <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+          Lascia la tua recensione
+        </a>
+      </div>
+
+      <!-- Modal Overlay -->
+      <div id="reviewModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 hidden">
+        <div class="bg-white text-black p-8 rounded-xl shadow-2xl w-full max-w-lg relative">
+          <!-- Chiudi -->
+          <button id="closeModal" class="absolute top-4 right-4 text-2xl font-bold text-gray-500 hover:text-black">&times;</button>
+
+          <!-- Contenuto dinamico -->
+          <div id="modalContent">
+            <h3 class="text-2xl font-bold mb-4 text-center">Lascia una Recensione</h3>
+
+            <!-- Nome -->
+            <input type="text" id="clientName" placeholder="Il tuo nome" class="w-full p-4 rounded-md border border-gray-300 mb-4" />
+
+            <!-- Stelle -->
+            <div class="rating mb-6 flex justify-center">
+              <input value="5" name="rating" id="star5" type="radio"><label for="star5"></label>
+              <input value="4" name="rating" id="star4" type="radio"><label for="star4"></label>
+              <input value="3" name="rating" id="star3" type="radio"><label for="star3"></label>
+              <input value="2" name="rating" id="star2" type="radio"><label for="star2"></label>
+              <input value="1" name="rating" id="star1" type="radio"><label for="star1"></label>
+            </div>
+
+            <!-- Testo recensione -->
+            <textarea id="reviewText"
+                      class="w-full p-4 rounded-md border border-gray-300 mb-4 resize-none"
+                      rows="4"
+                      placeholder="Scrivi qui la tua esperienza..."></textarea>
+
+            <!-- Invia -->
+            <div class="text-center">
+              <button id="submitReview"
+                      class="px-6 py-3 bg-yellow-400 text-black font-bold rounded-full hover:bg-yellow-300 transition-all duration-300">
+                Invia Recensione
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section id="screen5" class="relative min-h-screen bg-black text-yellow-400 flex flex-col items-center justify-center px-6 py-20">
+      <h2 class="text-5xl md:text-6xl font-extrabold uppercase text-center mb-16 fade-in delay-200">Contact Us</h2>
+    
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-12 text-center fade-in delay-400">
+    
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/wizshot.ai/" target="_blank" class="group flex flex-col items-center hover:text-yellow-300 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z" />
+          </svg>
+          Instagram
+        </a>
+    
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@tuo_profilo" target="_blank" class="group flex flex-col items-center hover:text-yellow-300 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12.97 2.001h3.18a5.948 5.948 0 0 0 5.86 5.003v3.197a9.149 9.149 0 0 1-5.86-2.007v7.765a6.97 6.97 0 1 1-6.95-6.97c.27 0 .53.02.79.06v3.24a3.72 3.72 0 1 0 3.72 3.73V2z" />
+          </svg>
+          TikTok
+        </a>
+    
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/tuo_profilo" target="_blank" class="group flex flex-col items-center hover:text-yellow-300 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4.98 3.5a2.48 2.48 0 1 0 0 4.96 2.48 2.48 0 0 0 0-4.96zM3 8.75h4v12.5H3zm7.5 0h3.65v1.75h.05a4 4 0 0 1 3.6-2c3.85 0 4.55 2.55 4.55 5.88v6.87h-4v-6.1c0-1.45-.03-3.32-2.02-3.32-2.02 0-2.33 1.57-2.33 3.2v6.22h-4z" />
+          </svg>
+          LinkedIn
+        </a>
+    
+        <!-- Email -->
+        <a href="mailto:Wizshotai@gmail.com" class="group flex flex-col items-center hover:text-yellow-300 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v1.38l-10 5.62-10-5.62V6c0-1.1.9-2 2-2zm16 4.25v9.75c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.25l10 5.63 10-5.63z"/>
+          </svg>
+          Email
+        </a>
+      </div>
+      <!-- Scritta in basso a sinistra -->
+      <div class="absolute bottom-6 left-6 text-2xl font-bold text-yellow-400">
+        Dedicated to Improving<br/>
+        2025 © WizShotAi
+      </div>
+
+      <img
+        src="/static/logo/logo.jpeg"
+        alt="WizShot Logo"
+        class="absolute bottom-6 right-6 w-48 h-auto"
+      /> 
+    </section>
+  </div>
+
+  <!-- Scroll detection script -->
+  <script>
+    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const navbar = document.getElementById('navbar');
+
+    const openModalBtn = document.querySelector('.cta-review-button');
+    const closeModalBtn = document.getElementById('closeModal');
+    const reviewModal = document.getElementById('reviewModal');
+    const submitBtn = document.getElementById('submitReview');
+    const modalContent = document.getElementById('modalContent');
+
+    // Apri modale
+    openModalBtn.addEventListener('click', () => {
+      reviewModal.classList.remove('hidden');
+    });
+
+    // Chiudi modale
+    closeModalBtn.addEventListener('click', () => {
+      reviewModal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', e => {
+      if (e.target === reviewModal) reviewModal.classList.add('hidden');
+    });
+
+    // Invio recensione
+    submitBtn.addEventListener('click', async () => {
+      const name   = document.getElementById('clientName').value.trim();
+      const rating = document.querySelector('input[name="rating"]:checked')?.value;
+      const text   = document.getElementById('reviewText').value.trim();
+
+      if (!name || !rating || !text) {
+        alert('Completa tutti i campi.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/send-review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, rating, text })
+        });
+        const json = await res.json();
+
+        if (res.ok) {
+          // mostra conferma
+          modalContent.innerHTML = `
+            <div class="text-center py-12">
+              <h3 class="text-2xl font-bold mb-4">Grazie per la tua recensione!</h3>
+              <p>La tua opinione è stata inviata con successo.</p>
+              <button id="closeAfterSend" class="mt-6 px-6 py-3 bg-yellow-400 text-black font-bold rounded-full hover:bg-yellow-300 transition-all duration-300">
+                Chiudi
+              </button>
+            </div>`;
+          document.getElementById('closeAfterSend').addEventListener('click', () => {
+            reviewModal.classList.add('hidden');
+          });
+        } else {
+          alert(json.error || 'Errore durante l\'invio.');
+        }
+      } catch (err) {
+        alert('Connessione fallita: ' + err.message);
+      }
+    });
+
+
+    function handleScroll() {
+      let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (currentScroll < lastScrollTop) {
+        // Scroll up → show nav
+        navbar.classList.remove('opacity-0', 'pointer-events-none');
+        navbar.classList.add('opacity-100');
+      } else {
+        // Scroll down → hide nav
+        navbar.classList.remove('opacity-100');
+        navbar.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    }
+
+    // Attach scroll listener to window
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // initial check
+
+    // Funzione per lo scroll verso la schermata specifica
+    function scrollToScreen(screenIndex) {
+      const screen = document.getElementById(`screen${screenIndex + 1}`);
+      window.scrollTo({
+        top: screen.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+    
+  </script>
+
+</body>
+</html>
